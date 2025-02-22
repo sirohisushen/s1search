@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S1 Model Live Test</title>
+    <link rel="stylesheet" href="/style.css">
+    <script defer src="/script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Search Bar -->
+        <div class="search-box">
+            <h1 class="logo">S1 Search Mode</h1>
+            <p>The model can take anywhere between 5-20s per search. We are working hard to reduce the time as much as possible.</p>    
+            <form id="search-form" action="/search" method="POST">
+                <input id="search-input" type="text" name="query" placeholder="Search S1..." required>
+                <button type="submit">🔍</button>
+            </form>
+        </div>
+
+        <% if (finalSummary) { %>
+            <div class="final-summary">
+                <h2>AI Overview</h2>
+                <p><%= finalSummary %></p>
+            </div>
+        <% } %>
+        
+        <% if (summary && summary.length > 0) { %>
+            <div class="search-results">
+                <% summary.forEach(item => { %>
+                    <div class="result">
+                        <h3><a href="<%= item.url %>" target="_blank"><%= item.title %></a></h3>
+                        <p><%= item.summary %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else if (query) { %>
+            <p class="no-results">No results found for "<%= query %>".</p>
+        <% } %>
+    </div>
+</body>
+</html>
