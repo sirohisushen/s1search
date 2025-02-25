@@ -3,14 +3,6 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import ejs from "ejs";
 import { pipeline } from "@xenova/transformers";
-import pidusage from "pidusage";
-import v8 from "v8";
-v8.setFlagsFromString('--max-old-space-size=450'); // Prevents exceeding free-tier RAM
-
-setInterval(async () => {
-    const stats = await pidusage(process.pid);
-    console.log(`🔍 Memory Usage: ${(stats.memory / 1024 / 1024).toFixed(2)} MB`);
-}, 5000);
 
 let summarizer;
 (async () => {
@@ -30,7 +22,6 @@ function decodeDuckDuckGoURL(url) {
     const match = url.match(/uddg=([^&]*)/);
     return match ? decodeURIComponent(match[1]) : url;
 }
-
 
 async function duckDuckGoSearch(query) {
     if (CACHE.has(query)) return CACHE.get(query);
@@ -63,6 +54,19 @@ async function duckDuckGoSearch(query) {
     }
 }
 
+// ✅ Prevents word repetition over 5 times
+function filterRepetitiveWords(text) {
+    const words = text.split(/\s+/);
+    const wordCount = {};
+    const filteredWords = words.filter(word => {
+        word = word.toLowerCase();
+        wordCount[word] = (wordCount[word] || 0) + 1;
+        return wordCount[word] <= 5;
+    });
+
+    return filteredWords.join(" ");
+}
+
 // ✅ Extracts only meaningful text, ignores duplicates
 async function fetchRelevantContent(url, query) {
     try {
@@ -75,13 +79,15 @@ async function fetchRelevantContent(url, query) {
 
         $("style, script, noscript, nav, footer, aside, .ads, .popup, audio, video, button").remove();
 
-        const extractedText = $("article, main, p, h1, h2, h3")
+        let extractedText = $("article, main, p, h1, h2, h3")
             .map((_, el) => $(el).text().trim())
             .get()
             .filter(text => text.length > 50 && keywordRegex.test(text));
 
-        const uniqueText = [...new Set(extractedText)]; // ✅ Removes duplicate sentences
-        return uniqueText.join(" ").slice(0, 3000);
+        if (extractedText.length === 0) return null; // ✅ Ensures relevance
+
+        let uniqueText = [...new Set(extractedText)].join(" ").slice(0, 3000);
+        return filterRepetitiveWords(uniqueText); // ✅ Removes word repetition
     } catch {
         return null;
     }
@@ -91,11 +97,12 @@ async function fetchRelevantContent(url, query) {
 async function summarizeText(text) {
     try {
         if (!summarizer) throw new Error("⏳ Model Not Ready!");
-        const summary = await summarizer(text, { max_length: 150, min_length: 60 });
+        const cleanedText = filterRepetitiveWords(text); // ✅ Extra cleaning before AI processing
+        const summary = await summarizer(cleanedText, { max_length: 150, min_length: 60 });
         return summary[0].summary_text;
     } catch (error) {
         console.error("❌ Summarization failed:", error);
-        return text.split(".").slice(0, 3).join(".");
+        return text.split(".").slice(0, 3).join(". ");
     }
 }
 
