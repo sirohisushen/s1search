@@ -1,15 +1,25 @@
 {
   "name": "s1",
   "version": "1.0.0",
+  "description": "An AI-powered search engine that summarizes web results using transformers.",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "AI",
+    "search",
+    "transformers",
+    "summarizer",
+    "web-scraping"
+  ],
+  "author": "Sushen Sirohi <sushensirohi@gmail.com> (https://shane-sirohi.web.app)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sirohisushen/s1search/issues"
+  },
+  "homepage": "https://shane-sirohi.web.app",
   "dependencies": {
     "@xenova/transformers": "^2.17.2",
     "axios": "^1.7.9",
@@ -18,5 +28,8 @@
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.0",
     "pidusage": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
