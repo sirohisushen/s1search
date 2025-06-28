@@ -1,119 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S1 Model Live Test</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Meta -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;600&display=swap');
-        body {
-            background: #00008B;
-            font-family: 'Roboto Mono', monospace;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-            margin: 0;
+  <!-- Title -->
+  <title>S1 – AI Summarized Search</title>
 
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            width: 90%;
-            max-width: 600px;
-        }
-        .logo {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .search-box p {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 20px;
-        }
-        #search-form {
-            display: flex;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            padding: 10px;
-            align-items: center;
-        }
-        #search-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 10px;
-            color: white;
-            font-size: 16px;
-        }
-        #search-form button {
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            padding: 10px;
-            cursor: pointer;
-        }
-        .search-results, .final-summary {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .result {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .result a {
-            color: #00FFFF;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .no-results {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
+  <!-- Icons & Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <style>
+    /* Typography & Base */
+    body {
+      background-color: #00008B;
+      font-family: 'Roboto Mono', monospace;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    /* Container with Glassmorphism */
+    .container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 640px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Logo Header */
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      height: 100px;
+    }
+
+    /* Subtext & Legal */
+    .search-box p {
+      font-size: 14px;
+      text-align: center;
+      opacity: 0.85;
+      margin: 8px 0;
+    }
+
+    .search-box a {
+      color: #00FFFF;
+      text-decoration: underline;
+    }
+
+    /* Search Form */
+    #search-form {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 8px 16px;
+      margin-top: 20px;
+    }
+
+    #search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #fff;
+      padding: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    #search-form button {
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    /* Results & Summary */
+    .final-summary,
+    .search-results {
+      margin-top: 32px;
+    }
+
+    .final-summary h2 {
+      margin-bottom: 12px;
+    }
+
+    .result {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+
+    .result a {
+      color: #00FFFF;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .no-results {
+      text-align: center;
+      margin-top: 20px;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="search-box">
-            <h1 class="logo"><img style="height: 120px;" src="logo.png"></h1>
-            <p>The S1 Model Can Take Between 1s-5s per search, please be patient</p>    
-            <p>By continuing you agree to our <a href="/legal">legal terms</a></p>
-            <form id="search-form" action="/search" method="POST">
-                <input id="search-input" type="text" name="query" placeholder="Search S1..." required>
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
+  <main class="container">
+    <!-- Search Header -->
+    <section class="search-box">
+      <div class="logo">
+        <img src="logo.png" alt="S1 Logo" />
+      </div>
+      <p><strong>S1 Model</strong> may take 1–5 seconds per query. Hang tight.</p>
+      <p>By continuing you agree to our <a href="/legal" target="_blank">legal terms</a>.</p>
 
-        <% if (finalSummary) { %>
-            <div class="final-summary">
-                <h2>AI Overview</h2>
-                <p><%= finalSummary %></p>
-            </div>
-        <% } %>
-        
-        <% if (summary && summary.length > 0) { %>
-            <div class="search-results">
-                <% summary.forEach(item => { %>
-                    <div class="result">
-                        <h3><a href="<%= item.url %>" target="_blank"><%= item.title %></a></h3>
-                        <p><%= item.summary %></p>
-                    </div>
-                <% }) %>
-            </div>
-        <% } else if (query) { %>
-            <p class="no-results">No results found for "<%= query %>".</p>
-        <% } %>
-    </div>
+      <!-- AI Search Input -->
+      <form id="search-form" action="/search" method="POST">
+        <input id="search-input" type="text" name="query" placeholder="Search S1..." required />
+        <button type="submit"><i class="fas fa-search"></i></button>
+      </form>
+    </section>
+
+    <!-- Conditional: AI Summary Block -->
+    <% if (finalSummary) { %>
+      <section class="final-summary">
+        <h2>AI Overview</h2>
+        <p><%= finalSummary %></p>
+      </section>
+    <% } %>
+
+    <!-- Conditional: Result Cards -->
+    <% if (summary && summary.length > 0) { %>
+      <section class="search-results">
+        <% summary.forEach(item => { %>
+          <div class="result">
+            <h3><a href="<%= item.url %>" target="_blank" rel="noopener"><%= item.title %></a></h3>
+            <p><%= item.summary %></p>
+          </div>
+        <% }) %>
+      </section>
+    <% } else if (query) { %>
+      <p class="no-results">No results found for "<%= query %>".</p>
+    <% } %>
+  </main>
 </body>
 </html>
