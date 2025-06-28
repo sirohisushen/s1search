@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Title -->
   <title>S1 – AI Summarized Search</title>
 
-  <!-- Icons & Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
 
-  <!-- Styles -->
   <style>
-    /* Typography & Base */
     body {
       background-color: #00008B;
       font-family: 'Roboto Mono', monospace;
@@ -25,7 +20,6 @@
       padding: 40px 20px;
     }
 
-    /* Container with Glassmorphism */
     .container {
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(12px);
@@ -36,7 +30,6 @@
       box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
     }
 
-    /* Logo Header */
     .logo {
       text-align: center;
       margin-bottom: 20px;
@@ -46,7 +39,6 @@
       height: 100px;
     }
 
-    /* Subtext & Legal */
     .search-box p {
       font-size: 14px;
       text-align: center;
@@ -59,7 +51,6 @@
       text-decoration: underline;
     }
 
-    /* Search Form */
     #search-form {
       display: flex;
       align-items: center;
@@ -88,7 +79,7 @@
       cursor: pointer;
     }
 
-    /* Results & Summary */
+
     .final-summary,
     .search-results {
       margin-top: 32px;
@@ -120,7 +111,6 @@
 </head>
 <body>
   <main class="container">
-    <!-- Search Header -->
     <section class="search-box">
       <div class="logo">
         <img src="logo.png" alt="S1 Logo" />
@@ -128,14 +118,12 @@
       <p><strong>S1 Model</strong> may take 1–5 seconds per query. Hang tight.</p>
       <p>By continuing you agree to our <a href="/legal" target="_blank">legal terms</a>.</p>
 
-      <!-- AI Search Input -->
       <form id="search-form" action="/search" method="POST">
         <input id="search-input" type="text" name="query" placeholder="Search S1..." required />
         <button type="submit"><i class="fas fa-search"></i></button>
       </form>
     </section>
 
-    <!-- Conditional: AI Summary Block -->
     <% if (finalSummary) { %>
       <section class="final-summary">
         <h2>AI Overview</h2>
@@ -143,7 +131,6 @@
       </section>
     <% } %>
 
-    <!-- Conditional: Result Cards -->
     <% if (summary && summary.length > 0) { %>
       <section class="search-results">
         <% summary.forEach(item => { %>
