@@ -8,7 +8,7 @@ let summarizer;
 (async () => {
     console.log("⏳ Loading AI Model...");
     summarizer = await pipeline("summarization", "Xenova/t5-small");
-    console.log("✅ Model Ready!");
+    console.log("Model ready. Good job, your device didnt explode");
 })();
 
 const app = express();
@@ -54,7 +54,7 @@ async function duckDuckGoSearch(query) {
     }
 }
 
-// ✅ Prevents word repetition over 5 times
+// Word repetition filter (dont touch)
 function filterRepetitiveWords(text) {
     const words = text.split(/\s+/);
     const wordCount = {};
@@ -67,7 +67,7 @@ function filterRepetitiveWords(text) {
     return filteredWords.join(" ");
 }
 
-// ✅ Extracts only meaningful text, ignores duplicates
+// Relevance (dont change this too)
 async function fetchRelevantContent(url, query) {
     try {
         const headers = { "User-Agent": "Mozilla/5.0" };
@@ -84,20 +84,20 @@ async function fetchRelevantContent(url, query) {
             .get()
             .filter(text => text.length > 50 && keywordRegex.test(text));
 
-        if (extractedText.length === 0) return null; // ✅ Ensures relevance
+        if (extractedText.length === 0) return null; // Ensures relevance
 
         let uniqueText = [...new Set(extractedText)].join(" ").slice(0, 3000);
-        return filterRepetitiveWords(uniqueText); // ✅ Removes word repetition
+        return filterRepetitiveWords(uniqueText); 
     } catch {
         return null;
     }
 }
 
-// ✅ AI Summarization (Forces AI use even for partial results)
+// Forced AI summary (you can change this, but it sucks just to let you know)
 async function summarizeText(text) {
     try {
         if (!summarizer) throw new Error("⏳ Model Not Ready!");
-        const cleanedText = filterRepetitiveWords(text); // ✅ Extra cleaning before AI processing
+        const cleanedText = filterRepetitiveWords(text); 
         const summary = await summarizer(cleanedText, { max_length: 150, min_length: 60 });
         return summary[0].summary_text;
     } catch (error) {
@@ -106,7 +106,7 @@ async function summarizeText(text) {
     }
 }
 
-// ✅ Guarantees 5 Unique Summaries
+// 5 Difference Summaries (Top ones more relevant)
 async function getTopSummarizedResults(query) {
     const results = await duckDuckGoSearch(query);
     const summaries = [];
@@ -114,7 +114,7 @@ async function getTopSummarizedResults(query) {
 
     for (const result of results) {
         if (summaries.length >= 5) break;
-        if (seenHosts.has(new URL(result.url).hostname)) continue; // ✅ Prevents duplicate domains
+        if (seenHosts.has(new URL(result.url).hostname)) continue; // No duplicate Summaries Please
 
         const content = await fetchRelevantContent(result.url, query);
         if (!content) continue;
@@ -151,4 +151,4 @@ app.post("/search", async (req, res) => {
     res.render("index", resultData);
 });
 
-app.listen(3000, () => console.log("🚀 Server running on http://localhost:3000"));
+app.listen(3000, () => console.log("Server fired up on 3000"));
